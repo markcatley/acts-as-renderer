@@ -1,0 +1,54 @@
+ActsAsRenderer
+==============
+
+Now you can violate MVC the easy way!
+
+Very often it's desirable to render view output from within a model.  For example, you may wish to render template output into a file or into a string from inside the context of script/runner.  See below for other legitimate use cases.
+
+This has traditionally been a real chore.  The only way to do it is to setup a mock controller and viewer and build your own rendering mechanism.  Now, with acts_as_renderer, you get four new methods baked right into your model: 
+
+Class Methods: render_string, render_file
+Instance Methods: render_to_string, render_to_file
+
+NOTE: Do not abuse this functionality!  While this plugin somewhat violates the spirit of MVC, those of us who have had legitimate uses for this know its importance and that it can be used in a non-evil manner.  *Think* before installing and using this plugin about whether this is the best (or only) way of handling your need.
+
+(Probably) Legitimate Use Cases
+===============================
+
+  - Rendering into a file or string using script/runner
+  - Rendering into a files as part of ActiveRecord callbacks
+  - Rendering into files through ActiveRecord associations
+
+Example
+=======
+
+  class Server < ActiveRecord::Base
+    acts_as_renderer
+    
+    def config_file
+      "/usr/local/configs/#{address}.conf"
+    end
+    
+    def build_configuration
+      render_to_file('configs/main', config_file)
+    end
+    
+    def process_configuration
+      config = render_to_string('configs/main')
+      process(config)
+    end
+  end
+
+  Server.find(1).build_configuration
+
+See the RDocs for information on all four of the included methods.
+
+Copyright (c) 2008 David Troy, released under the MIT license
+
+---
+
+Revision History:
+
+  1.02 - Fixed a path issue in renderer_test.rb to make rake test:plugins work
+  1.01 - Added support for Rails 1.x, which turned out to be trivial
+  1.00 - Initial Release, Rails 2.x Only
