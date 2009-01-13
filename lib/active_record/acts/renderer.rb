@@ -26,7 +26,7 @@ module ActiveRecord
             def self.render_string(template, assigns)
               viewer = Class.new(ApplicationController)
               path = ActionController::Base.view_paths rescue ActionController::Base.view_root
-              ActionView::Base.new(path, assigns, viewer).render(template)
+              ActionView::Base.new(path, assigns, viewer).render(:file => template)
             end
           EOV
         end
