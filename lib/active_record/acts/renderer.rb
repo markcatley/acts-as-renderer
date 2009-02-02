@@ -1,4 +1,4 @@
-require 'controllers/application'
+require 'application_controller'
 
 module ActiveRecord
   module Acts #:nodoc:
