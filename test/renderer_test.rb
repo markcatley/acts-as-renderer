@@ -71,4 +71,10 @@ class RendererTest < Test::Unit::TestCase
     assert_equal "matz has a python", File.read('./class.txt')
     File.delete('./class.txt')
   end
+  
+  def test_render_to_new_directory
+    RendererMixin.render_file('class.erb', './test_render_tmp/class.txt', :person => 'matz', :animal => 'python' )
+    assert_equal "matz has a python", File.read('./test_render_tmp/class.txt')
+    File.delete('./test_render_tmp/class.txt')    
+  end
 end

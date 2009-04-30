@@ -16,6 +16,18 @@ module ActiveRecord
             # Renders a template to a file with the included variable assignments
             def self.render_file(template, destination, assigns)
               if output = render_string(template, assigns)
+                unless File.exist?(destination)
+                  path = ''
+                  File.expand_path(File.dirname(destination)).split('/').each do |dir|
+                    # Step through each part of the path, making the dir where needed
+                    path = path + '/' + dir
+                    unless File.directory?(path)
+                      unless system('mkdir ' + path)
+                        raise "Unable to create " + path + ": " + $?
+                      end
+                    end
+                  end
+                end
                 File.open(destination, 'w') do |file|
               	  file.write output
             	  end
