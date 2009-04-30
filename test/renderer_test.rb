@@ -73,8 +73,29 @@ class RendererTest < Test::Unit::TestCase
   end
   
   def test_render_to_new_directory
+    if Dir.entries('.').include? 'test_render_tmp'
+      Dir.delete('test_render_tmp')
+    end
+    
     RendererMixin.render_file('class.erb', './test_render_tmp/class.txt', :person => 'matz', :animal => 'python' )
     assert_equal "matz has a python", File.read('./test_render_tmp/class.txt')
-    File.delete('./test_render_tmp/class.txt')    
+    File.delete('./test_render_tmp/class.txt')
+    Dir.delete('test_render_tmp')
+  end
+
+  def test_render_to_new_nested_directory
+    if Dir.entries('.').include? 'test_render_tmp'
+      if Dir.entries('test_render_tmp').include? 'another_tmp_dir'
+        Dir.delete('test_render_tmp/another_tmp_dir')
+      end
+      
+      Dir.delete('test_render_tmp')
+    end
+    
+    RendererMixin.render_file('class.erb', './test_render_tmp/another_tmp_dir/class.txt', :person => 'matz', :animal => 'python' )
+    assert_equal "matz has a python", File.read('./test_render_tmp/another_tmp_dir/class.txt')
+    File.delete('./test_render_tmp/another_tmp_dir/class.txt')
+    Dir.delete('test_render_tmp/another_tmp_dir')
+    Dir.delete('test_render_tmp')
   end
 end
